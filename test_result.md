@@ -194,6 +194,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ PASSED - Donor response tracking working perfectly. Donors can respond 'available' or 'not_available' with optional message. Duplicate responses prevented. Hospital staff can view all responses to their alerts."
+      - working: true
+        agent: "testing"
+        comment: "✅ VERIFIED - Recent improvements confirmed working. DonorResponse model includes donor_email field. Response creation at line 361 properly includes donor_email from current_user.email. Hospital staff can see both email (+1-555-0287) and phone (alex.thompson@email.com) when viewing responses via /alerts/{alert_id}/responses endpoint."
 
   - task: "Dashboard Statistics"
     implemented: true
