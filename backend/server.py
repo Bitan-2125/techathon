@@ -358,6 +358,7 @@ async def respond_to_alert(alert_id: str, response_data: DonorResponseCreate, cu
         alert_id=alert_id,
         donor_id=current_user.id,
         donor_name=current_user.name,
+        donor_email=current_user.email,
         donor_phone=current_user.phone,
         response=response_data.response,
         message=response_data.message
