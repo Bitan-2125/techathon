@@ -266,14 +266,9 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "JWT Authentication System"
-    - "User Registration & Login"
-    - "Blood Alert CRUD Operations"
-    - "Donor Matching Algorithm"
-    - "Donor Response Tracking"
+  current_focus: []
   stuck_tasks: []
-  test_all: true
+  test_all: false
   test_priority: "high_first"
 
 agent_communication:
