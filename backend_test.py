@@ -387,6 +387,41 @@ class BloodDonationTester:
             error_msg = response.json().get('detail', 'Unknown error') if response else 'No response'
             self.log_result("Hospital View Responses", False, f"Status: {response.status_code if response else 'None'}, Error: {error_msg}")
     
+    def test_donor_response_email_inclusion(self):
+        """Test that donor responses include both email and phone information"""
+        print("\n📧 Testing Donor Response Email Inclusion...")
+        
+        if not self.hospital_token or not self.test_alert_id:
+            self.log_result("Donor Response Email Inclusion", False, "Missing hospital token or alert ID")
+            return
+        
+        response = self.make_request('GET', f'/alerts/{self.test_alert_id}/responses', token=self.hospital_token)
+        
+        if response and response.status_code == 200:
+            responses = response.json()
+            if isinstance(responses, list) and len(responses) > 0:
+                # Check the first response for required fields
+                donor_response = responses[0]
+                required_fields = ['donor_email', 'donor_phone', 'donor_name', 'response']
+                missing_fields = [field for field in required_fields if field not in donor_response]
+                
+                if not missing_fields:
+                    # Verify the email matches our test donor
+                    if donor_response.get('donor_email') == 'mike.chen@email.com':
+                        self.log_result("Donor Response Email Inclusion", True, 
+                                      f"Response includes email: {donor_response['donor_email']}, phone: {donor_response.get('donor_phone', 'N/A')}")
+                    else:
+                        self.log_result("Donor Response Email Inclusion", False, 
+                                      f"Email mismatch. Expected: mike.chen@email.com, Got: {donor_response.get('donor_email')}")
+                else:
+                    self.log_result("Donor Response Email Inclusion", False, 
+                                  f"Missing required fields: {missing_fields}")
+            else:
+                self.log_result("Donor Response Email Inclusion", False, "No responses found to verify email inclusion")
+        else:
+            error_msg = response.json().get('detail', 'Unknown error') if response else 'No response'
+            self.log_result("Donor Response Email Inclusion", False, f"Status: {response.status_code if response else 'None'}, Error: {error_msg}")
+    
     def test_donor_cannot_view_responses(self):
         """Test that donors cannot view responses to alerts"""
         print("\n🚫 Testing Donor Response Access Restriction...")
