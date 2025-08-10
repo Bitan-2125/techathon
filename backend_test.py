@@ -547,6 +547,7 @@ class BloodDonationTester:
             self.test_donor_response()
             self.test_duplicate_response_prevention()
             self.test_hospital_view_responses()
+            self.test_donor_response_email_inclusion()  # New test for email inclusion
             self.test_donor_cannot_view_responses()
         
         # Access control tests
