@@ -103,6 +103,7 @@ class DonorResponse(BaseModel):
     alert_id: str
     donor_id: str
     donor_name: str
+    donor_email: str
     donor_phone: Optional[str] = None
     response: str  # "available", "not_available"
     message: Optional[str] = None
