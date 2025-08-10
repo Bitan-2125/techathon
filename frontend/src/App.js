@@ -756,6 +756,7 @@ const DonorDashboard = () => {
   const [stats, setStats] = useState({});
   const [mockEmails, setMockEmails] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -784,6 +785,17 @@ const DonorDashboard = () => {
         response,
         message
       });
+      
+      // Show success message
+      if (response === 'available') {
+        setSuccessMessage('Response successfully sent. Hospital will reach out to you');
+      } else {
+        setSuccessMessage('Response recorded. Thank you for letting us know');
+      }
+      
+      // Auto hide message after 5 seconds
+      setTimeout(() => setSuccessMessage(''), 5000);
+      
       fetchData(); // Refresh data
     } catch (error) {
       console.error('Failed to respond:', error);
