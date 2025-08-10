@@ -40,7 +40,7 @@ class BloodDonationTester:
             self.results['errors'].append(f"{test_name}: {message}")
     
     def make_request(self, method, endpoint, data=None, headers=None, token=None):
-        """Make HTTP request with proper error handling"""
+        """Make HTTP request with proper error handling and retries"""
         url = f"{API_BASE}{endpoint}"
         
         if headers is None:
@@ -49,20 +49,26 @@ class BloodDonationTester:
         if token:
             headers['Authorization'] = f"Bearer {token}"
         
-        try:
-            if method.upper() == 'GET':
-                response = self.session.get(url, headers=headers)
-            elif method.upper() == 'POST':
-                response = self.session.post(url, json=data, headers=headers)
-            elif method.upper() == 'PUT':
-                response = self.session.put(url, json=data, headers=headers)
-            elif method.upper() == 'DELETE':
-                response = self.session.delete(url, headers=headers)
-            
-            return response
-        except Exception as e:
-            print(f"Request error: {str(e)}")
-            return None
+        # Retry logic for connection issues
+        for attempt in range(3):
+            try:
+                if method.upper() == 'GET':
+                    response = self.session.get(url, headers=headers, timeout=10)
+                elif method.upper() == 'POST':
+                    response = self.session.post(url, json=data, headers=headers, timeout=10)
+                elif method.upper() == 'PUT':
+                    response = self.session.put(url, json=data, headers=headers, timeout=10)
+                elif method.upper() == 'DELETE':
+                    response = self.session.delete(url, headers=headers, timeout=10)
+                
+                return response
+            except Exception as e:
+                if attempt == 2:  # Last attempt
+                    print(f"Request error after 3 attempts: {str(e)}")
+                    return None
+                time.sleep(1)  # Wait before retry
+        
+        return None
     
     def test_hospital_registration(self):
         """Test hospital staff registration"""
